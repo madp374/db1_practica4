@@ -1,0 +1,129 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Buses Velocity</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Administracion</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/bus">Bus</a></li>
+				<li><a href="http://localhost:8000/ruta">Ruta</a></li>
+				<li><a href="http://localhost:8000/recorrido">Recorrido</a></li>
+				<li><a href="http://localhost:8000/ruta_bus">Ruta de Bus</a></li>
+				<li><a href="http://localhost:8000/ticket">Reservacion</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Administracion de Buses</h1>
+            <ul id="messages"></ul>
+			<h2>Buses Registrados</h2>
+			  <ul id="tablabus"></ul>
+			<form id="actualizarbus" action="">
+			<button>Mostrar</button>
+			</form>
+			<h2>Registrar Bus</h2>
+			<form id="enviar" action="">
+				Matricula<input id="matricula" autocomplete="off" /></br>
+				Tipo de Bus<input id="tipobus" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<h2>Eliminar Bus</h2>
+			<form id="eliminar" action="">
+				Codigo<input id="codigo" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<h2>Modificar Bus</h2>
+			<form id="cambiarbus" action="">
+				Codigo<input id="codigo1" autocomplete="off" /></br>
+				Tipo<input id="tipo" autocomplete="off" /></br>
+				<button>Modificar</button>
+			</form>
+			
+			<script>
+			  var socket = io();
+			  $('#enviar').submit(function(){
+				var text = '{ "bus" : [' +
+				'{ "matricula":"'+$('#matricula').val()+'" , "tipobus":"'+$('#tipobus').val()+'" }]}';
+			   socket.emit('bus', text);
+				$('#matricula').val('');
+				$('#tipobus').val('');
+				
+				return false;
+			  });
+			  $('#eliminar').submit(function(){
+				var text = '{ "tabla" : [' +
+				'{ "codigo":"'+$('#codigo').val()+'" }]}';
+			   socket.emit('eliminarbus', text);
+				$('#codigo').val('');
+				
+				return false;
+			  });
+			  $('#cambiarbus').submit(function(){
+				var text = '{ "tabla" : [' +
+				'{ "codigo":"'+$('#codigo1').val()+'", "tipo":"'+$('#tipo').val()+'"}]}';
+			   socket.emit('cambiarbus', text);
+				$('#codigo1').val('');
+				$('#tipo').val('');
+				return false;
+			  });
+			  $('#actualizarbus').submit(function(){
+				var text = 'cargar';
+			   socket.emit('Tbus', text);
+				return false;
+			  });
+			  
+			  socket.on('mensaje', function(msg){
+				
+				document.getElementById("messages").innerHTML=msg;	
+			  });
+			  socket.on('Tbus', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Codigo</td><td>Matricula</td><td>Tipo</td><td>Capacidad</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].BUS+'</td><td>'+obj1.tabla[a].Matricula+'</td><td>'+obj1.tabla[a].Tipo+'</td><td>'+obj1.tabla[a].Capacidad+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablabus").innerHTML=marco;	
+				
+				
+			  });
+			</script>
+		</div>
+		<div id="news">
+			
+			
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

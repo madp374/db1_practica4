@@ -1,0 +1,132 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Buses Velocity</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Reservacion</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/cliente">Inicio</a></li>
+				<li><a href="http://localhost:8000/reservar">Reservar</a></li>
+				<li><a href="http://localhost:8000/viaje">Puntos de viaje</a></li>
+				<li><a href="http://localhost:8000/boleto">Historial de viaje</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Historial de Viajes</h1>
+			
+			
+			
+			<h2>Historial de Viajes</h2>
+			  <ul id="tablabus"></ul>
+			<form id="verfactura" action="">
+			<button>Mostrar</button>
+			</form>
+			
+			<h2> Consultar Reservacion</h2>
+			<form id="actualizarviaje" action="">
+			No. Boleto<input id="origen" autocomplete="off" /></br>
+			<button>Mostrar</button>
+			</form>
+			
+			
+			<script>
+			  var socket = io();
+			  $('#enviar').submit(function(){
+				var text = localStorage.getItem('codcliente');
+			   socket.emit('boleto', text);
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  $('#verfactura').submit(function(){
+				var text = 'cargar';
+				 var tabla1='{"tabla":[';
+				var cuerpo='{"COD":"'+localStorage.getItem('codcliente')+'"}';
+				var fin=']}';
+				text=tabla1+cuerpo+fin;
+			       socket.emit('verfactura', text);
+				return false;
+			  });
+			  $('#aceptar').submit(function(){
+				var text = '{ "tabla" : [' +
+				'{ "boleto":"'+$('#origen').val()+'" , "punto":"'+$('#destino').val()+'"}]}';                              
+				socket.emit('cambiarestado', text);
+				window.location="http://localhost:8000/pago";
+				return false;
+			  });
+			
+			  socket.on('tablaboleto', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Boleto</td><td>Fecha</td><td>Total</td><td>Estado</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].BOLETO+'</td><td>'+obj1.tabla[a].FECHA+'</td><td>'+obj1.tabla[a].TOTAL+'</td><td>'+obj1.tabla[a].ESTADO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablabus").innerHTML=marco;	
+				
+				
+			  });
+			  
+			   $('#actualizarviaje').submit(function(){
+				var text = '{ "tabla" : [' +
+				'{ "boleto":"'+$('#origen').val()+'" , "punto":"'+$('#destino').val()+'"}]}';                              
+				socket.emit('tablaviaje', text);
+				
+				return false;
+			  });
+			   socket.on('Trecorrido', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Recorrido</td><td>Origen</td><td>Destino</td><td>Hora Salida</td><td>Hora Entrada</td><td>kilometraje</td><td>Costo</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].RECORRIDO+'</td><td>'+obj1.tabla[a].ORIGEN+'</td><td>'+obj1.tabla[a].DESTINO+'</td><td>'+obj1.tabla[a].HORA_SALIDA+'</td><td>'+obj1.tabla[a].HORA_LLEGADA+'</td><td>'+obj1.tabla[a].KILOMETRAJE+'</td><td>'+obj1.tabla[a].COSTO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablabus").innerHTML=marco;	
+				
+				
+			  });
+			</script>
+		</div>
+		<div id="news">
+			
+			
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

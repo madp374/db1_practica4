@@ -1,0 +1,87 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Buses Velocity</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Buses Velocity</h1>
+                        
+
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/index">Inicio</a></li>
+				<li><a href="http://localhost:8000/registro">Registrar</a></li>
+				<li><a href="http://localhost:8000/manual">Manual</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+		
+			<h1>Autenticacion de Usuarios</h1>
+			
+                       <form action="">
+      Nombre:<input id="nombre" autocomplete="off" /></br>
+	  Pass:<input id="pass" type="password" autocomplete="off" /></br>
+	  <button>Entrar</button>
+    </form>
+     <ul id="mens"></ul>
+	<a href="/about">About</a>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+	    var text = '{ "autenticar" : [' +
+		'{ "usuario":"'+$('#nombre').val()+'" , "pass":"'+$('#pass').val()+'" }]}' ;
+       // socket.emit('mensaje', $('#nombre').val(), $('#apellido').val());
+	   socket.emit('autenticar', text);
+        $('#nombre').val('');
+		$('#pass').val('');
+		//window.location="http://localhost:3000/about";
+        return false;
+      });
+      socket.on('mensaje', function(msg){
+      if(msg=='0'){
+	  document.getElementById("mens").innerHTML='Datos Invalidos';	
+      }else{
+	  document.getElementById("mens").innerHTML=msg;	
+	  localStorage.setItem('codcliente',msg);
+	  window.location="http://localhost:8000/cliente";
+	  
+      }
+      
+				
+      });
+    </script>
+		</div>
+		<div id="news">
+			<div class="newsItem">
+
+
+			</div>
+			
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

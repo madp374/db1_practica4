@@ -1,0 +1,114 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>BusVelocity</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Administracion</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/bus">Bus</a></li>
+				<li><a href="http://localhost:8000/ruta">Ruta</a></li>
+				<li><a href="http://localhost:8000/recorrido">Recorrido</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Administracion de Recorridos</h1>
+            <ul id="messages"></ul>
+			<h2>Rutas Registradas</h2>
+			  <ul id="tablarecorrido"></ul>
+			<form id="actualizarecorrido" action="">
+			<button>Mostrar</button>
+			</form>
+			<h2>Registrar Recorrido</h2>
+			<form id="enviar" action="">
+				Origen<input id="origen" autocomplete="off" /></br>
+				Destino<input id="destino" autocomplete="off" /></br>
+				Hora Salida<input id="salida" autocomplete="off" /></br>
+				Hora Entrada<input id="entrada" autocomplete="off" /></br>
+				Kilometraje<input id="kilometraje" autocomplete="off" /></br>
+				Costo<input id="costo" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<a href="/about">About</a>
+			<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+			<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+			<script>
+			  var socket = io();
+			  $('#enviar').submit(function(){
+				var text = '{ "recorrido" : [' +
+				'{ "origen":"'+$('#origen').val()+'" , "destino":"'+$('#destino').val()+'" , "salida":"'+$('#salida').val()+'" , "entrada": "'+$('#entrada').val()+'" , "kilometraje": "'+$('#kilometraje').val()+'" , "costo":"'+$('#costo').val()+'"}]}';                              
+			   socket.emit('recorrido', text);
+				$('#origen').val('');
+				$('#destino').val('');
+				$('#salida').val('');
+				$('#entrada').val('');
+				$('#kilometraje').val('');
+				$('#costo').val('');
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  $('#actualizarecorrido').submit(function(){
+				var text = 'cargar';
+			   socket.emit('Trecorrido', text);
+				return false;
+			  });
+			  
+			  socket.on('mensaje', function(msg){
+				//$('#messages').append($('<li>').text(msg));
+				document.getElementById("messages").innerHTML=msg;	
+			  });
+			  socket.on('Trecorrido', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Recorrido</td><td>Origen</td><td>Destino</td><td>Hora Salida</td><td>Hora Entrada</td><td>kilometraje</td><td>Costo</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].RECORRIDO+'</td><td>'+obj1.tabla[a].ORIGEN+'</td><td>'+obj1.tabla[a].DESTINO+'</td><td>'+obj1.tabla[a].HORA_SALIDA+'</td><td>'+obj1.tabla[a].HORA_LLEGADA+'</td><td>'+obj1.tabla[a].KILOMETRAJE+'</td><td>'+obj1.tabla[a].COSTO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablarecorrido").innerHTML=marco;	
+				
+				
+			  });
+			</script>
+		</div>
+		<div id="news">
+			<div class="newsItem">
+
+
+			</div>
+			<div class="newsItem">
+				
+				<p><img src='imagen/cca.jpg' /> </p>
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

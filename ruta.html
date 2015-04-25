@@ -1,0 +1,144 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Business 2007</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Administracion</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/bus">Bus</a></li>
+				<li><a href="http://localhost:8000/ruta">Ruta</a></li>
+				<li><a href="http://localhost:8000/recorrido">Recorrido</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Administracion de Rutas</h1>
+            <ul id="messages"></ul>
+			<h2>Rutas Registradas</h2>
+			  <ul id="tablaruta"></ul>
+			<form id="actualizaruta" action="">
+			<button>Mostrar</button>
+			</form>
+			<h2>Registrar Ruta</h2>
+			<form id="enviar" action="">
+				Origen<input id="origen" autocomplete="off" /></br>
+				Destino<input id="destino" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<h2>Registrar Punto de la Ruta</h2>
+			<form id="enviarPunto" action="">
+				Ruta<input id="ruta1" autocomplete="off" /></br>
+				Recorrido<input id="recorrido1" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<h2>Mostrar Puntos de la Ruta</h2>
+			  <ul id="tablarutapunto"></ul>
+			<form id="puntoruta" action="">
+			<button>Mostrar</button>
+			</form>
+			<a href="/about">About</a>
+			<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+			<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+			<script>
+			  var socket = io();
+			  $('#enviarPunto').submit(function(){
+				var text = '{ "punto" : [' +
+				'{ "ruta":"'+$('#ruta1').val()+'" , "recorrido":"'+$('#recorrido1').val()+'" }]}';
+			   socket.emit('Punto', text);
+				$('#recorrido1').val('');
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  $('#enviar').submit(function(){
+				var text = '{ "ruta" : [' +
+				'{ "origen":"'+$('#origen').val()+'" , "destino":"'+$('#destino').val()+'" }]}';
+			   socket.emit('ruta', text);
+				$('#origen').val('');
+				$('#destino').val('');
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  $('#actualizaruta').submit(function(){
+				var text = 'cargar';
+			   socket.emit('Truta', text);
+				return false;
+			  });
+			  $('#puntoruta').submit(function(){
+				var text = $('#ruta1').val();
+			   socket.emit('puntoruta', text);
+				return false;
+			  });
+			  socket.on('puntoruta', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Ruta</td><td>Recorrido</td><td>Origen</td><td>Destino</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].RUTA+'</td><td>'+obj1.tabla[a].RECORRIDO+'</td><td>'+obj1.tabla[a].ORIGEN+'</td><td>'+obj1.tabla[a].DESTINO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablarutapunto").innerHTML=marco;	
+				
+				
+			  });
+			  socket.on('mensaje', function(msg){
+				//$('#messages').append($('<li>').text(msg));
+				document.getElementById("messages").innerHTML=msg;	
+			  });
+			  socket.on('Truta', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Ruta</td><td>Origen</td><td>Destino</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].RUTA+'</td><td>'+obj1.tabla[a].ORIGEN+'</td><td>'+obj1.tabla[a].DESTINO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablaruta").innerHTML=marco;	
+				
+				
+			  });
+			</script>
+		</div>
+		<div id="news">
+			<div class="newsItem">
+
+
+			</div>
+			<div class="newsItem">
+				<h1>Other info</h1>
+				<p><img src='./plantilla1/imagen/cca.jpg' /> </p>
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

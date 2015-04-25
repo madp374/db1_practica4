@@ -1,0 +1,78 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Business 2007</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+			<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Buses Velocity</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000">Inicio</a></li>
+				<li><a href="http://localhost:8000/registro">Registrar</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Registro de Usuarios</h1>
+            <ul id="messages"></ul>
+			<form action="">
+				Nombre<input id="nombre" autocomplete="off" /></br>
+				Usuario<input id="usuario" autocomplete="off" /></br>
+				Contraseña<input id="pass" type="password" autocomplete="off" /></br>
+				<button>Registrar</button>
+			</form>
+			<a href="/about">About</a>
+			
+			<script>
+			  var socket = io();
+			  $('form').submit(function(){
+				var text = '{ "registro" : [' +
+				'{ "nombre":"'+$('#nombre').val()+'" , "usuario":"'+$('#usuario').val()+'" , "pass":"'+$('#pass').val()+'" }]}';
+			   socket.emit('registro', text);
+				$('#nombre').val('');
+				$('#usuario').val('');
+				$('#pass').val('');
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  socket.on('mensaje', function(msg){
+				$('#messages').append($('<li>').text(msg));
+			  });
+			</script>
+		</div>
+		<div id="news">
+			<div class="newsItem">
+
+
+			</div>
+			<div class="newsItem">
+				<h1>Other info</h1>
+				<p><img src='./plantilla1/imagen/cca.jpg' /> </p>
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+

@@ -1,0 +1,118 @@
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+       <title>Buses Velocity</title>
+       <link rel="stylesheet" type="text/css" href="css/style.css" />
+       <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+       <meta name="Author" content="Tjobbe Andrews, SiteCreative.net" />
+    </head>
+    <body>
+                <div id="container">
+	<div id="holder" class="clearfix">
+		<div id="logo">
+			<h1>Reservacion</h1>
+                        
+	  </div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://localhost:8000/cliente">Inicio</a></li>
+				<li><a href="http://localhost:8000/reservar">Reservar</a></li>
+				<li><a href="http://localhost:8000/viaje">Puntos de viaje</a></li>
+				<li><a href="http://localhost:8000/boleto">Historial de viaje</a></li>
+			</ul>
+	    </div>
+		<div id="header"></div>
+		<div id="content">
+			<h1>Area de Reservacion</h1>
+			<ul id="messages"></ul>
+			
+			
+			<h2>Nueva Reservacion</h2>
+			<form id="enviar" action="">
+				<button>Crear</button>
+			</form>
+			
+			<h2>Reservacion Actual</h2>
+			  <ul id="tablabus"></ul>
+			<form id="actualizarbus" action="">
+			<button>Mostrar</button>
+			</form>
+			<form id="aceptar" action="">
+			<button>Aceptar</button>
+			</form>
+			<script>
+			  var socket = io();
+			  $('#enviar').submit(function(){
+				var text = localStorage.getItem('codcliente');
+			   socket.emit('boleto', text);
+				//window.location="http://localhost:3000/about";
+				return false;
+			  });
+			  $('#actualizarbus').submit(function(){
+				var text = 'cargar';
+				 var tabla1='{"tabla":[';
+				var cuerpo='{"COD":"'+localStorage.getItem('codcliente')+'", "FACTURA":"'+localStorage.getItem('factura')+'"}';
+				var fin=']}';
+				text=tabla1+cuerpo+fin;
+			       socket.emit('tablaboleto', text);
+				return false;
+			  });
+			  $('#aceptar').submit(function(){
+				var text = '{ "tabla" : [' +
+				'{ "boleto":"'+localStorage.getItem('factura')+'" , "punto":"'+$('#destino').val()+'"}]}';                              
+				socket.emit('cambiarestado', text);
+				window.location="http://localhost:8000/pago";
+				return false;
+			  });
+			  socket.on('mensaje', function(msg){
+				//$('#messages').append($('<li>').text(msg));
+				document.getElementById("messages").innerHTML='Reservacion Creada';	
+				 localStorage.setItem('factura',msg);
+			  });
+			  socket.on('tablaboleto', function(msg){
+				
+				var obj1 = JSON.parse(msg);
+				var a=0;
+				var marco='<table border=4><tr><td>Boleto</td><td>Fecha</td><td>Total</td><td>Estado</td></tr>';
+				var pie='</table>'
+				var cuerpo='';
+				while(a<obj1.tabla.length){
+					cuerpo+='<tr><td>'+obj1.tabla[a].BOLETO+'</td><td>'+obj1.tabla[a].FECHA+'</td><td>'+obj1.tabla[a].TOTAL+'</td><td>'+obj1.tabla[a].ESTADO+'</td></tr>';
+					a++;
+				}
+				marco=marco+cuerpo+pie;
+				document.getElementById("tablabus").innerHTML=marco;	
+				
+				
+			  });
+			</script>
+		</div>
+		<div id="news">
+			<div class="newsItem">
+
+
+			</div>
+			<div class="newsItem">
+				<h1>Other info</h1>
+				<p><img src='./plantilla1/imagen/cca.jpg' /> </p>
+			</div>
+	  </div>
+	</div>
+	<div id="footer">
+		<span id="copyright">Design by <a href="http://www.sitecreative.net" target="_blank" title="Opens link to SiteCreative.net in a New Window">SiteCreative</a></span>
+		<ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Technology Solutions</a></li>
+			<li><a href="#">Portfolio</a></li>
+			<li><a href="#">Strategic Partners</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Jobs</a></li>
+		</ul>
+	</div>
+</div> 
+    </body>
+</html>
+
